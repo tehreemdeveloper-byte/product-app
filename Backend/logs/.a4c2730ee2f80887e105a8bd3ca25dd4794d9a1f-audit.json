@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "D:\\Full Project\\MERN-Project\\Backend\\logs\\.a4c2730ee2f80887e105a8bd3ca25dd4794d9a1f-audit.json",
+    "files": [
+        {
+            "date": 1770898352670,
+            "name": "D:\\Full Project\\MERN-Project\\Backend\\logs\\Error-2026-02-12.log",
+            "hash": "4fcd9a7b85bafb86a7f8fbcf5042f3784c1e6a2ba71728dd9010bebeef78131e"
+        },
+        {
+            "date": 1770959866026,
+            "name": "D:\\Full Project\\MERN-Project\\Backend\\logs\\Error-2026-02-13.log",
+            "hash": "d080bc6ef76fa80ed63d05ce016c9e850226222f2da40f100e37074743a95cfc"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -1,23 +1,15 @@
 import { Router } from "express";
+import AccessController from "../controllers/accessController.js";
+
 const router = Router();
 
-import protect from "../middlewares/authMiddleware.js";
-import Accesscontroller from "../controllers/accessController.js";
+// API Status
+router.get("/", AccessController.checkStatus);
 
-router.get("/", Accesscontroller.checkStatus);
-router.get("/validate", Accesscontroller.validate);
-router.get('/user-step', protect, Accesscontroller.checkUserStep);
+// Register
+router.post("/register", AccessController.registerAccounts);
 
-router.patch('/resent-otp', protect, Accesscontroller.resentOtpCode);
-
-router.post('/verify-email', protect, Accesscontroller.verifyEmailOtp);
-router.post('/registeraccount', Accesscontroller.registerAccounts);
-router.post('/register', Accesscontroller.register);
-router.post('/registeradmin', Accesscontroller.registerAdmin);
-
-router.post('/login', Accesscontroller.login);
-router.post('/forgot-password', Accesscontroller.forgotPassword);
-router.post('/reset-password', Accesscontroller.resetPassword);
-router.post('/change-password', protect, Accesscontroller.changePassword);
+// Login
+router.post("/login", AccessController.login);
 
 export default router;

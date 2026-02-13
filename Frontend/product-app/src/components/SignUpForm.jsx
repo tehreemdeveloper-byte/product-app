@@ -1,75 +1,12 @@
-
-// import React from "react";
-
-// const SignupForm = () => {
-//   return (
-//     <>
-//       <form>
-//         <div className="mb-3">
-//           <label className="form-label">Full Name</label>
-//           <input
-//             type="text"
-//             className="form-control form-control-lg"
-//             placeholder="John Doe"
-//             required
-//           />
-//         </div>
-
-//         <div className="mb-3">
-//           <label className="form-label">Email</label>
-//           <input
-//             type="email"
-//             className="form-control form-control-lg"
-//             placeholder="you@example.com"
-//             required
-//           />
-//         </div>
-
-//         <div className="mb-3">
-//           <label className="form-label">Password</label>
-//           <input
-//             type="password"
-//             className="form-control form-control-lg"
-//             required
-//           />
-//         </div>
-
-//         <div className="mb-4">
-//           <label className="form-label">Confirm Password</label>
-//           <input
-//             type="password"
-//             className="form-control form-control-lg"
-//             required
-//           />
-//         </div>
-
-//         <button
-//           type="submit"
-//           className="btn w-100 text-white"
-//           style={{
-//             background: "linear-gradient(135deg, #f97316, #f59e0b)",
-//           }}
-//         >
-//           Create Account
-//         </button>
-//       </form>
-
-//       <p className="text-center mt-4 text-muted">
-//         Already have an account? <a href="/login">Sign In</a>
-//       </p>
-//     </>
-//   );
-// };
-
-// export default SignupForm;
-
-
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import authService from "../services/authService";
 
 
 const Signup = () => {
+
+  const navigate = useNavigate();
 
 const[formData,setFormData] = useState(
   {
@@ -83,6 +20,7 @@ const[formData,setFormData] = useState(
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error,setError] = useState({});
+  const [apiError, setApiError] = useState(null);
 
 
 
@@ -99,7 +37,7 @@ const handleChange = (e) => {
 }
 
 
-const handleSubmit = (e) =>{
+const handleSubmit = async(e) =>{
   
   e.preventDefault()
 
@@ -138,12 +76,26 @@ const handleSubmit = (e) =>{
   setError(newErrors)
 
   if(Object.keys(newErrors).length === 0) {
+   await handleSignIn();
     console.log("Form submitted successfully");
     
   }
   
 
 
+}
+
+const handleSignIn = async() =>{
+  try {
+
+    const data = await authService.register(formData);
+     navigate('/');
+  }catch (error) {
+
+      setApiError(
+        error.response?.message || "Register fail"
+      );
+    }
 }
 
  
@@ -191,7 +143,8 @@ const handleSubmit = (e) =>{
 
 
               {/* Password */}
-              <div className={error.fullName ? "mb-2" : "mb-4"}>
+                <div className={`position-relative ${error.password ? "mb-2" : "mb-4"}`}>
+
                 <label className="form-label">Password</label>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -226,7 +179,9 @@ const handleSubmit = (e) =>{
               </div>
 
               {/* Confirm Password */}
-              <div className={error.fullName ? "mb-2" : "mb-4"}>
+              {/* <div className={error.fullName ? "mb-2" : "mb-4"}> */}
+                <div className={`position-relative ${error.confirmPassword ? "mb-2" : "mb-4"}`}>
+
                 <label className="form-label">Confirm Password</label>
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -258,6 +213,9 @@ const handleSubmit = (e) =>{
 
                 
               </div>
+
+                {error.password && <p style={{ color: "red" }}>{error.password}</p>}
+                {apiError && <p style={{ color: "red" }}>{apiError}</p>}
 
               {/* Submit */}
               <button

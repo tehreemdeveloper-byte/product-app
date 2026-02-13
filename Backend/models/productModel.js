@@ -1,21 +1,43 @@
 import mongoose, { Schema } from "mongoose";
 
 const productSchema = new Schema(
-    {
-        name: { type: String, default: "" },
-        file_url: { type: String, default: "" },
-        user_id: { type: Schema.Types.ObjectId, ref: "tbl_user", default: null },
-        // new attribute added here 
-        file_size: { type: Number, default: null },
-        file_type: { type: String, default: "" },
-        file_path: { type: String, default: "" },
-        file_key: { type: String, default: "" },
-        expire_at: { type: Date, default: null },
-        // new attribute ended here 
-        is_deleted: { type: Boolean, default: false },
+  {
+    name: { 
+      type: String, 
+      required: true,
+      trim: true,
+      default: "" 
     },
 
-    { timestamps: true }
+    price: { 
+      type: Number, 
+      required: true,
+      trim: true,
+      
+    },
+
+    description: { 
+      type: String,
+      trim: true,
+      default: "" 
+    },
+
+  tags: {
+  type: [String],
+  default: []
+},
+
+
+
+
+    is_deleted: { 
+      type: Boolean, 
+      default: false 
+    },
+  },
+  { 
+    timestamps: true 
+  }
 );
 
 const productModel = mongoose.model("tbl_product", productSchema);

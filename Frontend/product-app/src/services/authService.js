@@ -4,7 +4,6 @@ const login = async(credentials) =>{
     try {
         
         const response = await api.post('/auth/login',credentials);
-        console.log("i M response",response);
         
         return response.data.data
 
