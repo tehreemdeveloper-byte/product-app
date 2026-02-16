@@ -6,9 +6,13 @@ import { Link,useNavigate  } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import authService from "../services/authService";
 
+import { useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
+
 const LoginForm = () => {
   
   const navigate = useNavigate();
+  const {login} = useContext(AuthContext)
   
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -42,25 +46,28 @@ const LoginForm = () => {
     setError(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      await handleLogin();
+      await handleLogin(formData);
     }
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (formData) => {
     try {
-      const data = await authService.login(formData);
+      const response = await authService.login(formData);
 
-      localStorage.setItem("authToken", data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: data.name,
-          email: data.email
-        })
-      );
+      // localStorage.setItem("authToken", data.token);
+      // localStorage.setItem(
+      //   "user",
+      //   JSON.stringify({
+      //     name: data.name,
+      //     email: data.email
+      //   })
+      // );
 
-      // window.location.href = "/dashboard";
+      
+      login(response.data, response.token);
+      
       navigate('/dashboard', { replace: true });
+    // navigate("/dashboard");
 
     } catch (error) {
       setApiError(

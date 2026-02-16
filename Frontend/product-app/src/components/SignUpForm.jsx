@@ -88,12 +88,16 @@ const handleSubmit = async(e) =>{
 const handleSignIn = async() =>{
   try {
 
-    const data = await authService.register(formData);
-     navigate('/');
+    const response = await authService.register(formData);
+     if (response.status === 201 || response.status === 200) {
+      navigate("/", { replace: true });
+    }
+    //  navigate("/", { replace: true });     
   }catch (error) {
+    console.log("api error",apiError);
 
       setApiError(
-        error.response?.message || "Register fail"
+        error.response?.data?.message|| "Register fail"
       );
     }
 }

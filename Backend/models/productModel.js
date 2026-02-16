@@ -28,8 +28,6 @@ const productSchema = new Schema(
 },
 
 
-
-
     is_deleted: { 
       type: Boolean, 
       default: false 

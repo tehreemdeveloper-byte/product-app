@@ -1,0 +1,5 @@
+{"level":"error","message":"401 - Invalid email or password","timestamp":"2026-02-16 10:27:17"}
+{"level":"error","message":"401 - Invalid email or password","timestamp":"2026-02-16 10:31:23"}
+{"level":"error","message":"401 - Invalid email or password","timestamp":"2026-02-16 16:02:36"}
+{"level":"error","message":"409 - User already exists","timestamp":"2026-02-16 16:22:54"}
+{"level":"error","message":"409 - User already exists","timestamp":"2026-02-16 16:24:40"}

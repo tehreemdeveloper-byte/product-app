@@ -1,11 +1,26 @@
 
 import React from "react";
-import { Link } from "react-router-dom";
-import { FaShoppingCart } from "react-icons/fa";
+import { Link,useNavigate } from "react-router-dom";
+import { FaShoppingCart  } from "react-icons/fa";
+import { GoSignOut } from "react-icons/go";
+
+import { useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
+
 
 const Navbar = () => {
 
+  const navigate = useNavigate();
+  const { user, logout } = useContext(AuthContext);
+
+
   const userData = JSON.parse(localStorage.getItem("user"));
+
+  const handleLogout = ()=> {
+
+    logout();
+    navigate('/', { replace: true });
+  }
 
   return (
     <>
@@ -85,10 +100,10 @@ const Navbar = () => {
             {/* 👤 User Info */}
             <div className="text-end">
               <div className="fw-semibold">
-                {userData?.name || "Guest"}
+                {user?.name || "Guest"}
               </div>
               <small className="text-muted">
-                {userData?.email || ""}
+                {user?.email || ""}
               </small>
             </div>
 
@@ -99,6 +114,24 @@ const Navbar = () => {
             >
               👤
             </div>
+
+            {/* signout option */}
+             {/* Signout Icon */}
+<div
+  onClick={handleLogout}
+  className="d-flex align-items-center justify-content-center"
+  style={{
+    width: "40px",
+    height: "40px",
+    background: "#fee2e2",
+    borderRadius: "10px",
+    color: "#dc2626",
+    cursor: "pointer",
+    transition: "0.2s"
+  }}
+>
+  <GoSignOut size={18} />
+</div>
 
           </div>
 

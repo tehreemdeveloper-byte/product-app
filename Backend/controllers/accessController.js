@@ -86,7 +86,7 @@ export default class AccessController extends AuthController {
       this.responseGenerator(
         {
           id: user._id,
-          name: user.name,
+          name: user.fullName,
           email: user.email,
         },
         200,

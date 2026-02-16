@@ -5,7 +5,7 @@ const login = async(credentials) =>{
         
         const response = await api.post('/auth/login',credentials);
         
-        return response.data.data
+        return response.data
 
     }catch(err) {
         throw new Error(err)
@@ -17,7 +17,7 @@ const register = async (userData) => {
     try {
         
     const response = await api.post("/auth/register", userData);
-    return response.data.data;
+    return response.data;
 
     }catch(err) {
         throw new Error(err)
@@ -25,15 +25,11 @@ const register = async (userData) => {
         
 };
 
-const logout = () => {
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("user"); 
-};
+
 
 const authService = {
     register,
-    login,
-    logout
+    login
 }
 
 export default authService
