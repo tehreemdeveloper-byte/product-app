@@ -8,11 +8,11 @@ const cartSchema = new Schema(
             default:null
         },
        
-        totalPrice: {type: Number, default: 0},
+        total_price: {type: Number, default: 0},
         items: [{
             product: {type: mongoose.Schema.Types.ObjectId, ref: 'tbl_product'},
-            quantity: {type: Number, default: 1}, //how many itmes he has selected this one
-            price: {type: Number, default: 0}
+            quantity: {type: Number, default: 1}, //how many items he has selected this one
+            // price_at_Purchase: {type: Number, default: 0}
         }],
         
         is_deleted: { 

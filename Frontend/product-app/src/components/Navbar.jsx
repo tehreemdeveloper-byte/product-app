@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect,useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import { FaShoppingCart  } from "react-icons/fa";
 import { GoSignOut } from "react-icons/go";
@@ -7,24 +7,65 @@ import { GoSignOut } from "react-icons/go";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 
+import dashboardService from "../services/dashboardService"
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 
-const Navbar = () => {
+const Navbar = ({data,fetchCart}) => {
 
   const navigate = useNavigate();
   const { user, logout } = useContext(AuthContext);
+  
+  const [show, setShow] = useState(false);
 
-
-  const userData = JSON.parse(localStorage.getItem("user"));
+const handleClose = () => setShow(false);
+const handleShow = () => {
+  setShow(true);
+  fetchCart();
+}
 
   const handleLogout = ()=> {
 
-    logout();
+    logout(); //calling function from the context api
     navigate('/', { replace: true });
   }
 
+
+  // !all logic of cart list getting
+//  const [data,setData] = useState([]);
+  // const [error,setError] = useState(null);
+  // const fetchCart = async () => {
+  //   try {
+  //     const res = await dashboardService.getCartProduct();
+  //     console.log("Cart Response:", res);
+  //     if(res.status === 200) {
+
+  //       setData(res.data.data); 
+  //       // console.log("data length",res.data.data.length);
+        
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+const handleIncrement = async(product_id)=> {
+  await dashboardService.addToCart(product_id)
+   fetchCart();
+}
+
+const handleDecrement = async(product_id)=> {
+  await dashboardService.decrementCartProduct(product_id)
+   fetchCart();
+  
+   
+}
+  // !All logic of cart list getting
+
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-white shadow-sm px-4">
+      <nav className="navbar navbar-expand-lg bg-white shadow-sm px-4" style={{position:"sticky",top:0,overflow:"hidden",zIndex:2}}>
         <div className="container py-2 d-flex justify-content-between align-items-center">
 
           {/* ================= Left Logo ================= */}
@@ -61,9 +102,8 @@ const Navbar = () => {
             <div className="position-relative">
 
               <div
-                data-bs-toggle="offcanvas"
-                data-bs-target="#cartSidebar"
-                aria-controls="cartSidebar"
+                
+                onClick={handleShow}
                 className="d-flex align-items-center justify-content-center shadow-sm"
                 style={{
                   width: "45px",
@@ -71,14 +111,19 @@ const Navbar = () => {
                   background: "linear-gradient(135deg, #f97316, #f59e0b)",
                   borderRadius: "12px",
                   color: "white",
-                  cursor: "pointer"
+                  cursor: "pointer",
+                  
                 }}
               >
                 <FaShoppingCart size={18} />
               </div>
 
               {/* Badge */}
-              <span
+
+                {
+                data&&data.length>0 ? 
+                (
+                                <span
                 className="position-absolute d-flex align-items-center justify-content-center"
                 style={{
                   top: "-6px",
@@ -92,8 +137,12 @@ const Navbar = () => {
                   fontWeight: "bold"
                 }}
               >
-                3
+                {data.length}
               </span>
+                
+                ): 
+                (null) 
+                }
 
             </div>
 
@@ -117,21 +166,21 @@ const Navbar = () => {
 
             {/* signout option */}
              {/* Signout Icon */}
-<div
-  onClick={handleLogout}
-  className="d-flex align-items-center justify-content-center"
-  style={{
-    width: "40px",
-    height: "40px",
-    background: "#fee2e2",
-    borderRadius: "10px",
-    color: "#dc2626",
-    cursor: "pointer",
-    transition: "0.2s"
-  }}
->
-  <GoSignOut size={18} />
-</div>
+          <div
+            onClick={handleLogout}
+            className="d-flex align-items-center justify-content-center"
+            style={{
+              width: "40px",
+              height: "40px",
+              background: "#fee2e2",
+              borderRadius: "10px",
+              color: "#dc2626",
+              cursor: "pointer",
+              transition: "0.2s"
+            }}
+          >
+            <GoSignOut size={18} />
+          </div>
 
           </div>
 
@@ -139,52 +188,93 @@ const Navbar = () => {
       </nav>
 
       {/* ================= Sidebar ================= */}
-      <div
-        className="offcanvas offcanvas-end"
-        tabIndex="-1"
-        id="cartSidebar"
-      >
-        <div className="offcanvas-header">
-          <h5 className="fw-bold">🛒 Your Cart</h5>
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="offcanvas"
-          ></button>
-        </div>
+            <Offcanvas show={show} onHide={handleClose} placement="end">
+  <Offcanvas.Header closeButton>
+    <Offcanvas.Title className="fw-bold">
+      🛒 Your Cart
+    </Offcanvas.Title>
+  </Offcanvas.Header>
 
-        <div className="offcanvas-body">
+  <Offcanvas.Body>
 
-          <div className="card mb-3 shadow-sm">
-            <div className="card-body">
-              <h6 className="mb-1">Premium Shoes</h6>
-              <p className="mb-1 text-muted small">Quantity: 1</p>
-              <p className="fw-bold text-warning">$120</p>
+    {data && data.length > 0 ? (
+      data.map((item, index) => (
+
+        <Card className="mb-3 shadow-sm border-0" key={index}>
+          <Card.Body>
+            <div className="d-flex">
+
+              {/* Image */}
+              <img
+                src={item.image}
+                alt={item.name}
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  objectFit: "cover",
+                  borderRadius: "10px"
+                }}
+                className="me-3"
+              />
+
+              {/* Content */}
+              <div className="flex-grow-1">
+
+                <h6 className="mb-1">{item.name}</h6>
+
+                <small className="text-muted">
+                  Price: ${item.price}
+                </small>
+
+                <div className="fw-bold text-warning mb-2">
+                  Total: ${item.itemTotal}
+                </div>
+
+                <div className="d-flex align-items-center gap-2">
+
+                  <Button
+                    size="sm"
+                    variant="outline-secondary"
+                    onClick={() => handleDecrement(item.product_id)}
+                  >
+                    −
+                  </Button>
+
+                  <span className="fw-semibold">
+                    {item.quantity}
+                  </span>
+
+                  <Button
+                    size="sm"
+                    variant="warning"
+                    onClick={() => handleIncrement(item.product_id)}
+                  >
+                    +
+                  </Button>
+
+                </div>
+
+              </div>
             </div>
-          </div>
+          </Card.Body>
+        </Card>
 
-          <div className="card mb-3 shadow-sm">
-            <div className="card-body">
-              <h6 className="mb-1">Smart Watch</h6>
-              <p className="mb-1 text-muted small">Quantity: 2</p>
-              <p className="fw-bold text-warning">$250</p>
-            </div>
-          </div>
+      ))
+    ) : (
+      <p className="text-center text-muted">
+        Your cart is empty
+      </p>
+    )}
 
-          <div className="card mb-3 shadow-sm">
-            <div className="card-body">
-              <h6 className="mb-1">Leather Bag</h6>
-              <p className="mb-1 text-muted small">Quantity: 1</p>
-              <p className="fw-bold text-warning">$180</p>
-            </div>
-          </div>
+    {data.length > 0 && (
+      <Button variant="warning" className="w-100 mt-3">
+        Proceed to Checkout
+      </Button>
+    )}
 
-          <button className="btn btn-warning w-100 mt-3">
-            Proceed to Checkout
-          </button>
+  </Offcanvas.Body>
+</Offcanvas>
 
-        </div>
-      </div>
     </>
   );
 };

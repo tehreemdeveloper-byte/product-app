@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import authService from "../services/authService";
+import {toast} from 'react-toastify';
 
 
 const Signup = () => {
@@ -90,6 +91,7 @@ const handleSignIn = async() =>{
 
     const response = await authService.register(formData);
      if (response.status === 201 || response.status === 200) {
+       toast.success("Register successfully")
       navigate("/", { replace: true });
     }
     //  navigate("/", { replace: true });     

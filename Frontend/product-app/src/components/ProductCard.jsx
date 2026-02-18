@@ -1,7 +1,39 @@
 import React from "react";
+import dashboardService from "../services/dashboardService";
+import {toast} from 'react-toastify';
+import { useState } from "react";
 
-const ProductCard = ({ image, category,title,description,price,tags = [],
+
+const ProductCard = ({ image, category,title,description,price,tags = [],id,fetchCart
 }) => {
+
+  const [disable, setDisable] = useState(false);
+  
+const handleSubmit = async (id) => {
+  try {
+    setDisable(true); // 👈 sabse pehle disable karo
+
+    // await new Promise(resolve => setTimeout(resolve, 2000)); 
+
+   const response =  await dashboardService.addToCart(id);
+   if (response.status === 200) {
+    
+     
+     toast.success("Product added to cart successfully", {
+      autoClose: 1500,
+      onClose:() => {
+        setDisable(false);
+      }
+     });
+     fetchCart();
+   }
+
+
+  } catch (err) {
+    toast.error("Something went wrong");
+  } 
+};
+
   return (
     <div className="col-lg-3 col-md-6 mb-4">
       <div className="card h-100 shadow-lg border-0 rounded-4">
@@ -39,15 +71,19 @@ const ProductCard = ({ image, category,title,description,price,tags = [],
           <div className="d-flex justify-content-between align-items-center mt-auto">
             <h6 className="fw-bold mb-0">${price}</h6>
 
-            <button
-              className="btn btn-sm text-white"
-              style={{
-                background:
-                  "linear-gradient(135deg, #f97316, #f59e0b)",
-              }}
-            >
-              Add to Cart
-            </button>
+          <button
+  className="btn btn-sm text-white"
+  style={{
+    background: "linear-gradient(135deg, #f97316, #f59e0b)",
+  }}
+  onClick={() => handleSubmit(id)}
+  disabled={disable}
+>
+  {disable ? "Adding..." : "Add to Cart"}
+</button>
+
+
+            
           </div>
         </div>
 

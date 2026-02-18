@@ -1,0 +1,27 @@
+/* Custom Toast Styling */
+/* .Toastify__toast {
+  border-radius: 15px;
+  font-weight: 500;
+  padding: 16px;
+} */
+
+/* Success Toast */
+.Toastify__toast--success {
+  /* background: linear-gradient(135deg, #c0997e, #f59e0b); */
+    background: #d38a0bc7;
+
+  color: #fff;
+}
+
+/* Error Toast */
+.Toastify__toast--error {
+  /* background: linear-gradient(135deg, #dc3545, #b02a37); */
+    background: #da0e0ea4;
+
+  color: #fff;
+}
+
+/* Progress Bar */
+.Toastify__progress-bar {
+  background: #fbf7f7;
+}

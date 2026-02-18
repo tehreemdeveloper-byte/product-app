@@ -22,6 +22,11 @@ const productSchema = new Schema(
       default: "" 
     },
 
+      image: { 
+      type: String,
+      default: "" 
+    },
+
   tags: {
   type: [String],
   default: []
